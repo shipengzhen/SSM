@@ -1,0 +1,8 @@
+2017-9-5 13:27:32[ERROR](SpringLogger.java:59) getResults方法发生异常:org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.bdqn.ms.dao.IResultDao.getResults
+2017-9-5 13:27:32[ERROR](SpringLogger.java:41) getResults方法发生异常:org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.bdqn.ms.dao.IResultDao.getResults
+2017-9-5 13:27:32[ERROR](SpringLogger.java:59) getResults方法发生异常:org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.bdqn.ms.dao.IResultDao.getResults
+2017-9-5 13:27:32[ERROR](SpringLogger.java:41) getResults方法发生异常:org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.bdqn.ms.dao.IResultDao.getResults
+2017-9-5 13:28:05[ERROR](SpringLogger.java:59) getResults方法发生异常:org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.bdqn.ms.dao.IResultDao.getResults
+2017-9-5 13:28:05[ERROR](SpringLogger.java:41) getResults方法发生异常:org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.bdqn.ms.dao.IResultDao.getResults
+2017-9-5 13:28:05[ERROR](SpringLogger.java:59) getResults方法发生异常:org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.bdqn.ms.dao.IResultDao.getResults
+2017-9-5 13:28:05[ERROR](SpringLogger.java:41) getResults方法发生异常:org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): com.bdqn.ms.dao.IResultDao.getResults

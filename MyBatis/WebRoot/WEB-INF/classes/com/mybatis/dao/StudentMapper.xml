@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+	namespace  映射的接口
+	id 映射的方法名
+	resultType 返回值list中的类型
+	parameterType  传入参数类型(可以指定,他会自动获取接口传入参数)
+	type 实体类名
+-->
+<mapper namespace="com.mybatis.dao.IStudentDao"><!--映射的接口-->
+	<!--映射的接口<cache-ref namespace="com.mybatis.dao.IStudentDao"/>-->
+	<!--cache配置
+	eviction是缓存的淘汰算法，可选值有"LRU"、"FIFO"、"SOFT"、"WEAK"，缺省值是LRU
+	flashInterval指缓存过期时间，单位为毫秒，60000即为60秒，缺省值为空，即只要容量足够，永不过期
+	size指缓存多少个对象，默认值为1024
+	readOnly是否只读，如果为true，则所有相同的sql语句返回的是同一个对象（有助于提高性能，但并发操作同一条数据时，可能不安全），
+	如果设置为false，则相同的sql，后面访问的是cache的clone副本。
+	-->
+		<cache 
+			eviction="LRU"
+			flushInterval="60000"
+			size="1024"
+			readOnly="true"
+		/>
+	<!--查询全部学生人数-->
+	<select id="count" resultType="int" useCache="true">
+		select count(*) from student
+	</select>
+	<!--查询全部学生信息-->
+	<select id="studentList" resultType="com.mybatis.entity.Student">
+		select * from Student
+	</select>
+	<!--通过学生姓名查询学生信息-->
+	<!-- parameterType主要用于指定传入对象类型，如果不指定，会直接获取，接口参数，指定则是获取对象类的属性 -->
+	<select id="getStudentName" resultType="Student" parameterType="String">
+		select * from student where studentName=#{studentName}
+	</select>
+	<!--通过学生姓名查询学生信息使用Map集合-->
+	<select id="getStudentNameMap" resultType="Student" parameterType="Map">
+		select * from student where studentName=#{studentName} and gradeId=#{gradeId}
+	</select>
+	<!-- 使用resultMap查询全部学生信息 -->
+	<resultMap id="gradeList" type="Grade">
+		<id property="gradeId" column="gradeId"/>
+		<result property="gradeName" column="gradeName"/>
+	</resultMap>
+	<resultMap id="studentList" type="Student">
+		<id property="studentNo" column="studentNo"/><!--主键使用id效率高property数据库字段column实体类字段-->
+		<result property="loginPwd" column="loginPwd"/>
+		<result property="studentName" column="studentName"/>
+		<result property="sex" column="sex"/>
+		<result property="gradeId" column="gradeId"/>
+		<result property="phone" column="phone"/>
+		<result property="address" column="address"/>
+		<result property="bornDate" column="bornDate"/>
+		<result property="email" column="email"/>
+		<result property="identityCard" column="identityCard"/>
+		<association property="grade" resultMap="gradeList" >
+		<!--同一个resultMap中外部的同一个resultMap只能使用一次，association使用了collection就不能使用了(同一个resultMap) -->
+		<!-- 
+			<association property="grade" javaType="Grade">
+			<id property="gradeId" column="gradeId"/>
+			<result property="gradeName" column="gradeName"/>
+		 -->
+		</association>
+		<collection property="grades" ofType="Grade"> 
+			<id property="gradeId" column="gradeId"/>
+			<result property="gradeName" column="gradeName"/>
+		</collection>
+	</resultMap>
+	<select id="getMapStudentName" resultMap="studentList">
+		select * from Student inner join Grade on Student.gradeId=Grade.gradeId
+	</select>
+	<!--模糊查询学生信息,根据学生姓名-->
+	<select id="getStudentList" resultType="Student" parameterType="Student">
+		select * from student where studentName like CONCAT('%',#{studentName},'%')
+	</select>
+	<!-- 模糊查询学生信息,根据学生姓名和年纪id 使用 where-if -->
+	<select id="getStudents" resultType="Student">
+		<!--select* from Student studentName like CONCAT('%',#{studentName},'%') and gradeId=#{gradeId}-->
+		select * from Student
+		<where>
+			<if test="studentName!=null and studentName!=''">
+				studentName like CONCAT('%',#{studentName},'%')
+			</if>
+			<if test="gradeId!=null">
+				and gradeId=#{gradeId}
+			</if>
+		</where>
+	</select>
+	<!-- 通过学号修改学生多条信息,使用set-if -->
+	<update id="updateStudent">
+		<!--update Student set studentName=#{studentName},sex=#{sex} where studentNo=#{studentNo}-->
+		update Student
+		<set>
+			<if test="studentName!=null and studentName!=''">
+				studentName=#{studentName},
+			</if>
+			<if test="sex!=null and sex!=''">
+				sex=#{sex}
+			</if>
+			where studentNo=#{studentNo}
+		</set>
+	</update>
+	<!--新增学生信息通过,trim-choose-->
+	<insert id="insertStudent" >
+		<!--insert into Student(studentNo,loginPwd,studentName,sex) values(#{studentNo},#{loginPwd},#{studentName},#{sex})-->
+			insert into Student(studentNo,loginPwd,studentName,sex) values
+			<!--
+				prefix:前缀
+				suffix:后缀
+				prefixOverrides:首部要忽略的内容
+				suffixOverrides：尾部要忽略的内容
+			-->
+			<trim prefix="(" suffixOverrides="," suffix=")" >
+				<choose>
+					<when test="studentNo!=null">
+						#{studentNo},
+					</when>
+					<otherwise>
+						11111,
+					</otherwise>
+				</choose>
+				<choose>
+					<when test="loginPwd!=null and loginPwd!=''">
+						#{loginPwd},
+					</when>
+					<otherwise>
+						'123456',
+					</otherwise>
+				</choose>
+				<choose>
+					<when test="studentName!=null and studentName!=''">
+						#{studentName},
+					</when>
+					<otherwise>
+						'微笑吧',
+					</otherwise>
+				</choose>
+				<choose>
+					<when test="sex!=null and sex!=''">
+						#{sex},
+					</when>
+					<otherwise>
+						'男',
+					</otherwise>
+				</choose>
+			</trim>
+	</insert>
+	<!--通过数组查询学生信息-->
+	<select id="getStudentsArray" resultType="Student">
+		select * from Student where studentNo in
+		<!--foreach
+			item:表示集合中每一个元素进行迭代是的别名(数组名,list集合名,map集合名)
+			index:指定一个名称,用于表示在迭代过程中,每次迭代到的位置(数组,list集合的下标,map集合名的key)
+			open:表示该语句以什么开始(既然是in条件语句所以必然是以"("开始)
+			separator:表示在每次迭代之间以什么符号作为分隔符(既然是in条件语句所以必然是以","开始)
+			close:表示该语句以什么结束(既然是in条件语句所以必然是以")"结束)
+			collection:
+				单参数为List集合,属性值为list
+				单参数为数组,属性值为array
+				多参数需要把参数封装成Map集合,属性值一般为key
+		  -->
+		<foreach collection="array" item="studentNos" open="(" separator="," close=")" >
+			#{studentNos}
+		</foreach>
+	</select>
+	<!--通过List<学号>集合批量刪除学生信息-->
+	<delete id="deleteStudentList">
+		delete from Student where studentNo in
+		<foreach collection="list" item="studentNos" open="(" separator="," close=")" >
+			#{studentNos}
+		</foreach>
+	</delete>
+	<!-- 通过学号修改学生多条信息,使用set-if(对象当条件) -->
+	<update id="updateStudent2">
+		<!--update Student set studentName=#{studentName},sex=#{sex} where studentNo=#{studentNo}-->
+		update Student
+		<set>
+			<if test="studentName!=null and studentName!=''">
+				studentName=#{studentName},
+			</if>
+			<if test="sex!=null and sex!=''">
+				sex=#{sex}
+			</if>
+			where studentNo=#{studentNo}
+		</set>
+	</update>
+	<!--通过Map集合查询学生信息-->
+	<select id="getStudentsMap" resultType="Student">
+		select * from Student where studentNo in
+		<!--foreach
+			item:表示集合中每一个元素进行迭代是的别名(数组名,list集合名,map集合名)
+			index:指定一个名称,用于表示在迭代过程中,每次迭代到的位置(数组,list集合的下标,map集合名的key)
+			open:表示该语句以什么开始(既然是in条件语句所以必然是以"("开始)
+			separator:表示在每次迭代之间以什么符号作为分隔符(既然是in条件语句所以必然是以","开始)
+			close:表示该语句以什么结束(既然是in条件语句所以必然是以")"结束)
+			collection:
+				单参数为List集合,属性值为list
+				单参数为数组,属性值为array
+				多参数需要把参数封装成Map集合,属性值一般为key
+		  -->
+		<foreach collection="studentNos" item="students" open="(" separator="," close=")" >
+			#{students}
+		</foreach>
+	</select>
+	<!-- 查询学生信息(List<Student>) -->
+	<select id="getStudentList2" resultType="Student">
+		select * from Student where studentNo in
+		<foreach collection="list" item="students" open="(" close=")">
+			#{students.studentNo}
+		</foreach>
+	</select>
+	<!-- 新增多条学生信息List<Student> -->
+	<insert id="insertStudents">
+		insert into Student(studentNo,loginPwd,studentName,sex) values
+		<foreach collection="list" item="students" separator=",">
+			<trim prefix="(" suffixOverrides="," suffix=")" >
+				<choose>
+					<when test="students.studentNo!=null">
+						#{students.studentNo},
+					</when>
+					<otherwise>
+						11111,
+					</otherwise>
+				</choose>
+				<choose>
+					<when test="students.loginPwd!=null and students.loginPwd!=''">
+						#{students.loginPwd},
+					</when>
+					<otherwise>
+						'123456',
+					</otherwise>
+				</choose>
+				<choose>
+					<when test="students.studentName!=null and students.studentName!=''">
+						#{students.studentName},
+					</when>
+					<otherwise>
+						'微笑吧',
+					</otherwise>
+				</choose>
+				<choose>
+					<when test="students.sex!=null and students.sex!=''">
+						#{sex},
+					</when>
+					<otherwise>
+						'男',
+					</otherwise>
+				</choose>
+			</trim>
+		</foreach> 
+	</insert>
+	<!-- 分页查询所有学生信息 -->
+	<select id="getAllStudentsPage" resultType="Student">
+		<!--select * from 表名 limit (当前页-1)*页大小,页大小-->
+		select * from Student limit #{currentPageNo},#{pageSize}
+	</select>
+</mapper>

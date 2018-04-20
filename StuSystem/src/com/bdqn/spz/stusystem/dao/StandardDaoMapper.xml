@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.spz.stusystem.dao.IStandardDao"><!--标准信息接口 -->
+	<!--查询标准信息数量-->
+	<select id="selectStandardCount" resultType="Integer" parameterType="String">
+		select count(*) from standard 
+		<if test="_parameter!=null and _parameter!=''">
+			where stdNum like concat('%',#{stdNum},'%') or zhname like concat('%',#{stdNum},'%')
+		</if>
+	</select>
+	
+	<!-- 查询标准信息(分页) -->
+	<select id="selectStandards" resultType="Standard" parameterType="Paging">
+		select * from standard
+		<if test="t.stdNum!=null and t.stdNum!=''">
+			where stdNum like concat('%',#{t.stdNum},'%') or zhname like concat('%',#{t.stdNum},'%')
+		</if>
+		order by releaseDate desc limit #{pageNo},#{pageSize}
+	</select>
+	
+	<!-- 删除标准信息 -->
+	<delete id="deleteStandards" parameterType="Integer">
+		delete from standard where id in
+		<trim prefix="(" prefixOverrides="," suffix=")">
+			<foreach collection="array" item="standardId">
+				,#{standardId}
+			</foreach>
+		</trim>
+	</delete>
+	
+	<!-- 新增标准信息-->
+	<insert id="insertStandard" parameterType="Standard">
+		insert into standard values(#{id},#{stdNum},#{zhname},#{version},#{keys},#{releaseDate},#{implDate},#{packagePath})
+	</insert>
+	
+	<!-- 查询标准信息通过stdNum -->
+	<select id="selectStandardByStdNum" parameterType="String" resultType="Standard">
+		select * from standard where stdNum=#{stdNum}
+	</select>
+	
+	<!--查询标准信息通过ID  -->
+	<select id="selectStandardById" parameterType="Integer" resultType="Standard">
+		select * from standard where id=#{standardId}
+	</select>
+	
+	<!--修改标准信息 -->
+	<update id="updateStandard" parameterType="Standard">
+		update Standard set stdNum=#{stdNum},zhname=#{zhname},version=#{version},`keys`=#{keys},releaseDate=#{releaseDate},
+		implDate=#{implDate}
+		<if test="packagePath!=null">
+			,packagePath=#{packagePath}
+		</if>
+		  where id=#{id}
+	</update>
+</mapper>

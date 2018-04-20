@@ -1,0 +1,8 @@
+eclipse.preferences.version=1
+encoding//generated/page.properties=UTF-8
+encoding//src/com/bdqn/app/controller/backend/BackendController.java=UTF-8
+encoding//src/com/bdqn/app/controller/developer/DeveloperController.java=UTF-8
+encoding//src/com/bdqn/app/dao/devuser/IDevUserDao.java=UTF-8
+encoding//src/com/bdqn/app/service/developer/IDevUserService.java=UTF-8
+encoding//src/com/bdqn/app/service/developer/impl/BackendUserServiceImpl.java=UTF-8
+encoding//src/com/bdqn/app/tools/Properties.java=UTF-8

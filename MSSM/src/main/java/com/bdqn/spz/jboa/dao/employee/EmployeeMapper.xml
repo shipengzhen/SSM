@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.spz.jboa.dao.employee.IEmployeeDao"><!--员工接口 -->
+	<!-- 开发者登陆 -->
+	<select id="selectEmployee" resultType="Employee" parameterType="Employee">
+		select *,(select nameCn
+		from position where id=positionId)
+		positionNameCn,(select name from department where
+		id=departmentId)departmentName from employee
+		<trim prefix="where" prefixOverrides="and">
+			<if test="sn!= null and sn!=''">
+				sn =#{sn}
+			</if>
+			<if test="passWord!= null and passWord!= ''">
+				and passWord =#{passWord}
+			</if>
+			<if test="departmentId!= null">
+				and departmentId=#{departmentId}
+			</if>
+			<if test="positionId!= null">
+				and positionId=#{positionId}
+			</if>
+		</trim>
+	</select>
+
+	<!-- 查询员工上级 -->
+	<select id="selectSn" resultType="String">
+		select sn from employee where
+		departmentId=(select departmentId from employee where sn=#{sn}) and
+		positionId=(select id from position where nameCn=#{nameCn})
+	</select>
+
+	<!-- 查询员工的职位 -->
+	<select id="selectPositionNameCnBySn" parameterType="String"
+		resultType="String">
+		select (select nameCn from position where
+		id=positionId)positionNameCn from employee where sn=#{sn}
+	</select>
+</mapper>

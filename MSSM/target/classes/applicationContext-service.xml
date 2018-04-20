@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+	 
+	<import resource="applicationContext-mybatis.xml"/>
+	 
+	<!-- Service层职工实现类 -->
+	<bean id="EmployeeServiceImpl" class="com.bdqn.spz.jboa.service.impl.EmployeeServiceImpl">
+		<property name="employeeDao" ref="IEmployeeDao"></property>
+	</bean>
+
+	<!-- Service层报销单实现类 -->
+	<bean id="ExpenseAccountServiceImpl"
+		class="com.bdqn.spz.jboa.service.impl.ExpenseAccountServiceImpl">
+		<property name="expenseAccountDao" ref="IExpenseAccountDao"></property>
+		<property name="employeeDao" ref="IEmployeeDao"></property>
+		<property name="expenseAccountDetailDao" ref="IExpenseAccountDetailDao"></property>
+		<property name="checkResultDao" ref="ICheckResultDao"></property>
+		<property name="positionDao" ref="IPositionDao"></property>
+	</bean>
+	
+	<!-- Service层请假实现类 -->
+	<bean id="LeaveServiceImpl" class="com.bdqn.spz.jboa.service.impl.LeaveServiceImpl">
+		<property name="leaveDao" ref="ILeaveDao"></property>
+		<property name="employeeDao" ref="IEmployeeDao"></property>
+	</bean>
+</beans>

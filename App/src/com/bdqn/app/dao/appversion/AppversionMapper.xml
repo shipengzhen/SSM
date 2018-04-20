@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.app.dao.appversion.IAppVersionDao"><!--映射的接口-->
+
+	<!-- 查询app版本 -->
+	<select id="findAppVersions" parameterType="Integer" resultType="AppVersion">
+		select v.*,
+			(select a.softwareName from app_info a where a.id=v.appId ) as appName,
+			(select valueName from data_dictionary d where  v.publishStatus=d.valueId AND d.typeCode='PUBLISH_STATUS') as publishStatusName
+		from  app_version  v where v.appId =#{appInfoId} order by v.creationDate DESC
+	</select>
+	
+	<!-- 查询app版本的数量 -->
+	<select id="findAppVersionCountByAppId" parameterType="Integer" resultType="Integer">
+			select count(*)	from  app_version where appId =#{appId}
+	</select>
+		
+	
+	<!--新增App版本-->
+	<insert id="insertAppVersion" parameterType="AppVersion">
+		insert into app_version (appId,versionNo,versionInfo,publishStatus,
+			downloadLink,versionSize,apkLocPath,apkFileName,createdBy,creationDate)
+		values(#{appId},#{versionNo},#{versionInfo},#{publishStatus},#{downloadLink},
+			#{versionSize},#{apkLocPath},#{apkFileName},#{createdBy},#{creationDate})
+	</insert>
+	
+	<!-- 查询最新版本信息 -->
+	<select id="findNewAppVersion" parameterType="Integer" resultType="AppVersion">
+		select v.*,
+			(select a.softwareName from app_info a where a.id=v.appId ) as appName,
+			(select valueName from data_dictionary d where  v.publishStatus=d.valueId AND d.typeCode='PUBLISH_STATUS') as publishStatusName
+		from  app_version  v where v.appId =#{appId} order by v.creationDate DESC limit 0,1
+	</select>
+	
+	<!--删除apk文件的服务器存储路径 -->
+	<update id="updateApkLocPath" parameterType="Integer">
+		update app_version set apkLocPath='',downloadLink='' where id=#{verId}
+	</update>
+	
+	<!--查询apk文件的服务器存储路径 -->
+	<select id="findApkLocPath" parameterType="Integer" resultType="String">
+		select apkLocPath from app_version where id=#{verId}
+	</select>
+	
+	<!--修改app版本 -->
+	<update id="updateAppVersion" parameterType="AppVersion">
+		update app_version
+		<trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+			<if test="versionNo != null">versionNo=#{versionNo},</if>
+			<if test="versionInfo != null">versionInfo=#{versionInfo},</if>
+			<if test="publishStatus != null">publishStatus=#{publishStatus},</if>
+			<if test="downloadLink != null">downloadLink=#{downloadLink},</if>
+			<if test="apkLocPath != null">apkLocPath=#{apkLocPath},</if>
+			<if test="versionSize != null">versionSize=#{versionSize},</if>
+			<if test="apkFileName != null">apkFileName=#{apkFileName},</if>
+			<if test="modifyBy != null">modifyBy=#{modifyBy},</if>
+			<if test="modifyDate != null">modifyDate=#{modifyDate},</if>
+		</trim>
+	</update>
+	
+	<!-- 根据appId删除相应app的版本 -->
+	<delete id="deleteVersionByAppId">
+		delete from app_version where appId = #{appId}
+	</delete>
+</mapper>

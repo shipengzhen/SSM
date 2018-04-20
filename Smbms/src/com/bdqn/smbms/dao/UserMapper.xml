@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.smbms.dao.IUserDao"><!--映射的接口-->
+	<!-- 用户登陆 -->
+	<select id="doLogin" resultType="User">
+		select * from User where userName=#{userName} and userPassword=#{userPassword}
+	</select>
+	<!-- 模糊查询用户数量 -->
+	<select id="findUCount" resultType="int">
+		select count(*) from User where userName like concat('%',#{userName},'%') and userRole=#{userRole}
+	</select>
+	<!-- 模糊查询用户信息 -->
+	<select id="findUsers" resultType="User">
+		select * from User where userName like concat('%',#{userName},'%') and userRole=#{userRole} limit #{currentPageNo},#{pageSize}
+	</select>
+	<!--新增用户 -->
+	<insert id="addUser" parameterType="User">
+		insert  into User values(null,#{userCode},#{userName},#{userPassword},
+		#{gender},#{birthday},#{phone},#{address},#{userRole},#{createdBy},#{creationDate},null,null,#{idPicPath})
+	</insert>
+	<!-- 通过用户Id查询用户信息 -->
+	<select id="findUser" resultType="User" parameterType="int">
+		select id,userCode,userName,gender,birthday,phone,address,userRole,idPicPath from User where id=#{id}
+	</select>
+	<!-- 修改用户信息 -->
+	<update id="modifyUser" parameterType="User">
+		update User set userName=#{userName},gender=#{gender},
+			birthday=#{birthday},phone=#{phone},address=#{address},userRole=#{userRole} where id=#{id}
+	</update>
+	<!-- 判断用户编码是否存在 -->
+	<select id="findCount" resultType="int" parameterType="string">
+		select count(*) from user where userCode=#{userCode}
+	</select>
+</mapper>

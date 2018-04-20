@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+	<!-- bean:Spring配置文件中寻找,local:当前配置文件中寻找 -->
+	<!-- 通过bean元素声明需要Spring创建的实例。该实例的类型通过class属性指定，并通过id属性为该实例指定一个名称，以便在程序中使用 -->
+	<!-- 学生实体类 -->
+	<bean id="Student" class="com.bdqn.spring.entity.Student"></bean>
+	<!-- 年纪实体类
+	property和p属性注入可以同时使用但不能同时给一个属性赋值(建议不要混用,代码风格要一致) -->
+	<bean id="Grade" class="com.bdqn.spring.entity.Grade" ><!-- p:gradeId="1" p:gradeName="S1" p:student-ref="Student" >--><!--  p命令空间实现属性注入 -->
+		<!-- 通过set方法赋值初始值优先级比构造高(可以使用value标签也可以value属性赋值) -->
+		<property name="gradeId" value="1">
+			<!-- 如果属性值中包含了xml中的特殊字符(&,<,>,"",')则使用<![CDATA[]]>
+			<value><![CDATA[A&B]]></value>
+			xml预定义的实体引用	(<  &lt;) (>  &gt;) (&  &amp;) ('  &apos;) (""  &quot;)
+			严格的讲只有<和&是非法的,其他三个是合法的,但最好用实体引用
+			注入空字符串使用<null/> -->
+		</property>
+		<property name="gradeName" value="S1">
+			<!-- <value>S1</value> -->
+		</property>
+		<property name="student" ref="Student">
+			<!-- <ref bean="Student"/> -->
+		</property>
+		<!-- 注入集合类型的属性 -->
+		<property name="students">
+			<list>
+				<!-- 定义list或数组中的元素 -->
+				<ref bean="Student"/>
+			</list>
+			<!-- <array>
+				定义数组中的元素
+				<value></value>或<ref bean=""/>
+			</array>
+			<set>
+				定义set中的元素
+				<value></value>或<ref bean=""/>
+			</set>
+			<map>
+				定义map中的键值对
+				<entry>
+					<key><value></value></key>
+					<value><null/></value>或<ref bean=""/>
+				</entry>
+			</map>
+			<props>
+				定义props中的键值对,props中的键值对通常都是字符串类型
+				<prop key=<null/>><null/></prop>
+			</props> -->
+		</property>
+		<!-- 构造方法注入 -->
+		<constructor-arg name="gradeId"  type="int" value="2" index="0"></constructor-arg>
+		<constructor-arg name="gradeName"  type="String" value="S1"></constructor-arg>
+	</bean>
+	<!-- 学生Dao层实现类 -->
+	<bean id="StudentDaoImpl" class="com.bdqn.spring.dao.impl.StudentDaoImpl"></bean>
+	<!-- 年纪Dao层实现类 -->
+	<bean id="GradeDaoImpl" class="com.bdqn.spring.dao.impl.GradeDaoImpl"></bean>
+	<!-- 学生Service层实现类 -->
+	<bean id="StudentServiceImpl" class="com.bdqn.spring.service.impl.StudentServiceImpl">
+	</bean>
+	<!-- 年纪Service层实现类 -->
+	<bean id="GradeServiceImpl" class="com.bdqn.spring.service.impl.GradeServiceImpl"></bean>
+	
+	<!-- 声明增强方法所在的Bean(类) -->
+    <bean id="SpringLogger" class="com.bdqn.spring.aop.SpringLogger"></bean>
+	<!-- 配置切面 -->
+    <aop:config>
+        <!-- 定义切入点,要增强的Bean(类)
+        execution(切入点表达式)是切入点指示符
+        	public * addNewUser(bean类路径):*表示匹配所有类型的返回值
+        	public void * addNewUser(bean类路径):*表示匹配所有方法名
+        	public void addNewUser(..):..表示匹配所有参数个数和类型
+        	* com .*.*(..):这个表达式匹配com包下的所有类的所有方法
+        	* com ..*.*(..):这个表达式匹配com包及其子包下的所有类的所有方法 
+        -->
+        <aop:pointcut id="pointcut" expression="execution(* com ..*.*(..))" />
+       <!--  引用包含增强(=添加)方法的Bean(类) -->
+        <aop:aspect ref="SpringLogger"><!-- 要增强bean的Id -->
+            <!-- 将before()方法定义为前置增强并引用pointcut切入点 -->
+            <aop:before method="before" pointcut-ref="pointcut"></aop:before>
+           <!--  将afterReturning()方法定义为后置增强并引用pointcut切入点,通过returning属性指定为名为result的参数注入返回值 -->
+            <aop:after-returning method="afterReturning" pointcut-ref="pointcut" returning="result" />
+            <!--  将afterThrowing()方法定义为异常抛出增强(catch)并引用pointcut切入点,通过throwing属性指定为名为e的参数注入异常实例 -->
+             <aop:after-throwing method="afterThrowing" pointcut-ref="pointcut" throwing="e"/>
+           <!--   将afterLogger()方法定义为最终增强(finally)并引用pointcut切入点 -->
+			<aop:after method="afterLogger" pointcut-ref="pointcut"/>
+			<!-- 将aroundLogger()方法定义为环绕增强并引用pointcut切入点 -->
+			<aop:around method="aroundLogger" pointcut-ref="pointcut"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

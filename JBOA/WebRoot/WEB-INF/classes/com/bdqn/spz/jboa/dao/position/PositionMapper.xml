@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.spz.jboa.dao.position.IPositionDao"><!--映射的接口职位 -->
+	<!--查询部门 -->
+	<select id="selectPosition" resultType="Position" parameterType="Position">
+		select * from Position where nameCn=#{nameCn}
+	</select>
+</mapper>

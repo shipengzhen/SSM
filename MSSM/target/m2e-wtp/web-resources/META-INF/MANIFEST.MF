@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: MSSM
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: ￦ﾖﾽ￩ﾹﾏ￦ﾌﾯ
+Implementation-Vendor-Id: com.bdqn.spz
+Build-Jdk: 1.8.0_144
+Implementation-URL: http://projects.spring.io/spring-boot/MSSM/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+

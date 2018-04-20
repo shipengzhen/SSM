@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.spz.jboa.dao.expenseaccountdetail.IExpenseAccountDetailDao"><!--报销单详情 -->
+
+	<!-- 新增一条或多条报销单详情 -->
+	<insert id="insertExpenseAccountDetailDaos" parameterType="ExpenseAccountDetail">
+		insert into ExpenseAccountDetail values
+		<foreach collection="list" item="ExpenseAccountDetail"
+			separator=",">
+			(null,#{ExpenseAccountDetail.mainId},#{ExpenseAccountDetail.item}
+			,#{ExpenseAccountDetail.account},#{ExpenseAccountDetail.desc})
+		</foreach>
+	</insert>
+	
+	<!-- 删除一条或多条报销单详情 -->
+	<delete id="deleteExpenseAccountDetailDaos" parameterType="Integer">
+		delete from expenseaccountdetail where mainId=#{expenseAccountId}
+	</delete>
+	
+	<!-- 查询一条或多条报销单详情 -->
+	<select id="selectExpenseAccountDetailDaos" parameterType="Integer" resultType="ExpenseAccountDetail">
+		select * from expenseaccountdetail where mainId=#{expenseAccountId}
+	</select>
+</mapper>

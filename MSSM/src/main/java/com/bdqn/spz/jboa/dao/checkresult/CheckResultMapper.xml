@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.spz.jboa.dao.checkresult.ICheckResultDao"><!--报销单审核 -->
+	<!--查询一条或多条报销单审核结果 -->
+	<select id="selectCheckResults" parameterType="Integer" resultType="CheckResult">
+		select *,(select name from employee where sn=checkSn)checkName from checkresult where claimId in(#{expenseAccountId})
+	</select>
+	
+	<!-- 新增报销单审核结果 -->
+	<insert id="insertCheckResult" parameterType="CheckResult">
+		insert into checkresult values(null,#{claimId},#{checkTime},#{checkSn},#{result},#{comment})
+	</insert>
+</mapper>

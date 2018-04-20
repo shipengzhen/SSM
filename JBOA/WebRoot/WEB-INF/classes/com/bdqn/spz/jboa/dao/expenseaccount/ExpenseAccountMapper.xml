@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.spz.jboa.dao.expenseaccount.IExpenseAccountDao"><!--映射的接口 -->
+
+	<!--查询报销单数量 -->
+	<select id="selectExpenseAccountCount" resultType="Integer"
+		parameterType="ExpenseAccount">
+		select count(*) from expenseaccount
+		<trim prefix="where" prefixOverrides="and">
+			<if test="createSn!= null and createSn!=''">
+				createSn=#{createSn}
+			</if>
+			<if test="nextCheckSn!= null and nextCheckSn!=''">
+				and nextCheckSn=#{nextCheckSn}
+			</if>
+			<if test="status!= null and status!= ''">
+				and status=#{status}
+			</if>
+			<if test="createTime!= null">
+				and createTime>=#{createTime}
+			</if>
+			<if test="modifyTime!= null">
+				and modifyTime&lt;=#{modifyTime}
+			</if>
+		</trim>
+	</select>
+
+	<!--查询报销单 -->
+	<select id="selectExpenseAccounts" resultType="ExpenseAccount"
+		parameterType="Paging">
+		select *,
+		(select name from employee where sn
+		=nextCheckSn)nextCheckName,
+		(select name from employee where sn
+		=createSn)createName
+		from expenseaccount
+		<trim prefix="where" prefixOverrides="and">
+			<if test="t.createSn!= null and t.createSn!=''">
+				createSn=#{t.createSn}
+			</if>
+			<if test="t.nextCheckSn!= null and t.nextCheckSn!=''">
+				and nextCheckSn=#{t.nextCheckSn}
+			</if>
+			<if test="t.status!= null and t.status!= ''">
+				and status=#{t.status}
+			</if>
+			<if test="t.createTime!= null">
+				and createTime>=#{t.createTime}
+			</if>
+			<if test="t.modifyTime!= null">
+				and modifyTime&lt;=#{t.modifyTime}
+			</if>
+		</trim>
+		order by id,createTime desc,modifyTime desc limit #{pageNo},#{pageSize}
+	</select>
+
+	<!-- 新增报销单 -->
+	<insert id="insertExpenseAccount" parameterType="ExpenseAccount">
+		insert into
+		ExpenseAccount(id,nextCheckSn,createSn,createTime,`event`,toatlAccount,`status`)
+		values(null,#{nextCheckSn},#{createSn},#{createTime}
+		,#{event},#{toatlAccount},#{status})
+	</insert>
+
+	<!-- 查询最新的报销单 -->
+	<select id="selectNewExpenseAccount" resultType="ExpenseAccount"
+		parameterType="String">
+		select * from expenseaccount where createSn=#{createSn}
+		order by createTime desc limit 0,1
+	</select>
+
+	<!-- 删除报销单 -->
+	<delete id="deleteExpenseAccount" parameterType="Integer">
+		delete from
+		expenseaccount where id=#{expenseAccountId}
+	</delete>
+
+	<!-- 查询报销单 -->
+	<select id="selectExpenseAccount" parameterType="Integer"
+		resultType="ExpenseAccount">
+		select *,
+		(select name from employee where
+		sn=nextCheckSn)nextCheckName,
+		(select
+		name from employee where
+		sn=createSn)createName,
+		(select nameCn from
+		position where id=(select
+		positionId from employee where
+		sn=createSn))positionName,
+		(select name
+		from department where
+		id=(select departmentId from employee where
+		sn=createSn))departmentName
+		from expenseaccount where
+		id=#{expenseAccountId}
+	</select>
+
+	<!-- 修改报销单 -->
+	<update id="updateExpenseAccount" parameterType="ExpenseAccount">
+		update
+		expenseaccount set
+		<trim suffixOverrides=",">
+			<if test="nextCheckSn!=null">
+				nextCheckSn=#{nextCheckSn},
+			</if>
+			<if test="createSn!=null and createSn!=''">
+				createSn=#{createSn},
+			</if>
+			<if test="createTime!=null">
+				createTime=#{createTime},
+			</if>
+			<if test="event!=null and event!=''">
+				`event`=#{event},
+			</if>
+			<if test="toatlAccount!=null">
+				toatlAccount=#{toatlAccount},
+			</if>
+			<if test="status!=null and status!=''">
+				`status`=#{status},
+			</if>
+			<if test="modifyTime!=null">
+				modifyTime=#{modifyTime}
+			</if>
+		</trim>
+		where id=#{id}
+	</update>
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.spz.jboa.dao.leave.ILeaveDao"><!--映射的接口请假 -->
+
+	<!-- 查询请假列表的数量 -->
+	<select id="selectLeaveCount" parameterType="Leave" resultType="Integer">
+		select count(*) from `leave`
+		<trim prefix="where" prefixOverrides="and">
+			<if test="employeeSn!= null and employeeSn!=''">
+				employeeSn=#{employeeSn}
+			</if>
+			<if test="nextCheckSn!= null and nextCheckSn!=''">
+				and nextCheckSn=#{nextCheckSn}
+			</if>
+			<if test="status!= null and status!= ''">
+				and status=#{status}
+			</if>
+			<if test="startTime!= null">
+				and startTime>=#{startTime}
+			</if>
+			<if test="endTime!= null">
+				and endTime&lt;=#{endTime}
+			</if>
+		</trim>
+	</select>
+
+	<!-- 查询请假列表(分页) -->
+	<select id="selectLeaves" parameterType="Paging" resultType="Leave">
+		select *,(select name from employee where sn=employeeSn)employeeName
+		from `leave`
+		<trim prefix="where" prefixOverrides="and">
+			<if test="t.employeeSn!= null and t.employeeSn!=''">
+				employeeSn=#{t.employeeSn}
+			</if>
+			<if test="t.nextCheckSn!= null and t.nextCheckSn!=''">
+				and nextCheckSn=#{t.nextCheckSn}
+			</if>
+			<if test="t.status!= null and t.status!= ''">
+				and status=#{t.status}
+			</if>
+			<if test="t.startTime!= null">
+				and startTime>=#{t.startTime}
+			</if>
+			<if test="t.endTime!= null">
+				and endTime&lt;=#{t.endTime}
+			</if>
+		</trim>
+		order by id,createTime desc,modifyTime desc limit
+		#{pageNo},#{pageSize}
+	</select>
+
+	<!-- 查询休假类型 -->
+	<select id="selectLeaveType" resultType="String">
+		select
+		DISTINCT(leaveType) from `leave`
+	</select>
+
+	<!-- 新增请假 -->
+	<insert id="insertLeave" parameterType="Leave">
+		insert into
+		`leave`(employeeSn,startTime,endTime,leaveDay,reason,`status`,leaveType,nextCheckSn,createTime)
+		values(#{employeeSn},#{startTime},#{endTime},#{leaveDay},#{reason},#{status},#{leaveType},#{nextCheckSn},#{createTime})
+	</insert>
+
+	<!-- 查询请假详情 -->
+	<select id="selectLeave" parameterType="Integer" resultType="Leave">
+		select *,(select name from department where id=(select departmentId
+		from employee where sn=employeeSn))departmentName from `leave` where
+		id=#{leaveId}
+	</select>
+	
+	<!-- 修改请假 -->
+	<update id="updateLeave" parameterType="Leave">
+		update `leave` set `status`=#{status},approveOpinion=#{approveOpinion},modifyTime=#{modifyTime} where id=#{id}
+	</update>
+</mapper>

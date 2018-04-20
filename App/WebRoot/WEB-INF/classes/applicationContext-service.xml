@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!--管理员业务逻辑实现类-->
+	<bean id="BackendUserServiceImpl" class="com.bdqn.app.service.developer.impl.BackendUserServiceImpl">
+		<property name="backendUserDao" ref="IBackendUserDao"></property>
+	</bean>
+	
+	<!--开发者业务逻辑实现类-->
+	<bean id="DevUserServiceImpl" class="com.bdqn.app.service.developer.impl.DevUserServiceImpl">
+		<property name="developerDao" ref="IDevUserDao"></property>
+	</bean>
+	
+	<!-- App业务逻辑现实类 -->
+	<bean id="AppInfoServiceImpl" class="com.bdqn.app.service.developer.impl.AppInfoServiceImpl">
+		<property name="appVersionDao" ref="IAppVersionDao"></property>
+		<property name="appInfoDao" ref="IAppInfoDao"></property>
+	</bean>
+	
+	<!-- App版本业务逻辑实现类 -->
+	<bean id="AppVersionServiceImpl" class="com.bdqn.app.service.developer.impl.AppVersionServiceImpl">
+		<property name="appVersionDao" ref="IAppVersionDao"></property>
+		<property name="appInfoDao" ref="IAppInfoDao"></property>
+	</bean>
+</beans>

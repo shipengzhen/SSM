@@ -1,0 +1,274 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!-- groupId : 组织标识，例如：org.codehaus.mojo，在M2_REPO目录下，将是: org/codehaus/mojo目录。(包名共同部分) -->
+	<groupId>com.bdqn.spz</groupId>
+	<!-- artifactId : 项目名称，例如：my-project，在M2_REPO目录下，将是：org/codehaus/mojo/my-project目录。 -->
+	<artifactId>MSSM</artifactId>
+	<!-- version : 版本号，例如：1.0，在M2_REPO目录下，将是：org/codehaus/mojo/my-project/1.0目录。 -->
+	<version>0.0.1-SNAPSHOT</version>
+	<!-- packaging : 打包的格式，可以为：pom , jar , maven-plugin , ejb , war , ear , 
+		rar , par -->
+	<packaging>war</packaging>
+	<!-- maven名称 -->
+	<name>MSSM</name>
+	<!-- maven描述 -->
+	<description>MSSM project for Spring MVC</description>
+	<!-- 获取maven的地址 -->
+	<!-- <url>http://localhost:8081/nexus/content/groups/public/</url> -->
+	<!-- POM包括了所有的项目信息 groupId:项目或者组织的唯一标志，并且配置时生成路径也是由此生成， 如org.myproject.mojo生成的相对路径为：/org/myproject/mojo(包路径) 
+		artifactId:项目的通用名称(类名) version:项目的版本(jar版本) packaging:打包机制，如pom,jar,maven-plugin,ejb,war,ear,rar,par 
+		name:用户描述项目的名称，无关紧要的东西，可选 url:应该是只是写明开发团队的网站，无关紧要，可选 classifer:分类 其中groupId,artifactId,version,packaging这四项组成了项目的唯一坐标。 
+		一般情况下，前面三项就可以组成项目的唯一坐标了。 -->
+	<!-- POM关系：主要为依赖，继承，合成 -->
+	<properties>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- jdk版本号 -->
+		<java.version>1.7</java.version>
+		<!-- web支持版本号 -->
+		<webVersion>3.1</webVersion>
+		<!-- spring版本号 -->
+		<spring.version>3.2.18.RELEASE</spring.version>
+		<!-- mybatis版本号 -->
+		<mybatis.version>3.3.1</mybatis.version>
+		<!-- mybatis-Spring整合 -->
+		<mybatis-spring.version>1.2.5</mybatis-spring.version>
+		<!-- 连接数据库 -->
+		<mysql-driver.version>5.1.44</mysql-driver.version>
+		<commons-dbcp>1.2.2</commons-dbcp>
+		<!-- log4j版本号 -->
+		<slf4j.version>1.7.25</slf4j.version>
+		<log4j.version>1.2.17</log4j.version>
+		<!--上传组件包 -->
+		<commons-fileupload.version>1.3.3</commons-fileupload.version>
+		<commons-io.version>2.4</commons-io.version>
+		<commons-codec.version>1.10</commons-codec.version>
+
+		<aspectjweaver.version>1.8.13</aspectjweaver.version>
+	</properties>
+	<!-- 依赖关系 -->
+	<dependencies>
+		<!-- web依赖 -->
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>7.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- <dependency> <groupId>javax.servlet</groupId> <artifactId>javax.servlet-api</artifactId> 
+			<version>3.1.0</version> <scope>provided</scope> </dependency> -->
+
+		<!-- jstl -->
+		<!-- <dependency> <groupId>org.glassfish.web</groupId> <artifactId>javax.servlet.jsp.jstl</artifactId> 
+			<version>1.2.2</version> </dependency> -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${aspectjweaver.version}</version>
+		</dependency>
+
+		<!-- 测试依赖 -->
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<!--指定范围在测试时才会加载 -->
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Spring依赖 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-oxm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- mybatis依赖 -->
+		<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${mybatis.version}</version>
+		</dependency>
+
+		<!-- mybatis-spring整合依赖 -->
+		<!-- https://mvnrepository.com/artifact/org.mybatis/mybatis-spring -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>${mybatis-spring.version}</version>
+		</dependency>
+
+		<!-- 日志 -->
+		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- mysql依赖 -->
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql-driver.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-dbcp/commons-dbcp -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>${commons-dbcp}</version>
+		</dependency>
+
+		<!-- 上传组件包 -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${commons-fileupload.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons-io.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${commons-codec.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.40</version>
+		</dependency>
+	</dependencies>
+
+	<!-- 插件 -->
+	<build>
+		<!-- 插件管理 -->
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.6</version>
+					<configuration>
+						<failOnMissingWebXml>false</failOnMissingWebXml>
+					</configuration>
+				</plugin>
+				<!-- tomcat -->
+				<plugin>
+					<!-- tomcat6 命令 tomcat:run-->
+					<!-- <groupId>org.codehaus.mojo</groupId> <artifactId>tomcat-maven-plugin</artifactId> -->
+					<!-- tomcat7 命令 tomcat7:run -->
+					<groupId>org.apache.tomcat.maven</groupId>
+					<artifactId>tomcat7-maven-plugin</artifactId>
+					<configuration>
+						<path>/ssmm</path>
+						<port>8080</port>
+						<uriEncoding>UTF-8</uriEncoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>jetty-maven-plugin</artifactId>
+					<configuration>
+						<webAppConfig>
+							<contextPath>/MSSM</contextPath>
+							<!-- <allowDuplicateFragmentNames>true</allowDuplicateFragmentNames> -->
+						</webAppConfig>
+						<connectors>
+							<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+								<port>9090</port>
+								<maxIdleTime>60000</maxIdleTime>
+							</connector>
+						</connectors>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- service层用户实现类 -->
+    <bean id="UserServiceImpl" class="com.bdqn.smbms.service.impl.UserServiceImpl">
+    	<property name="userDao" ref="IUserDao"></property>
+    </bean>
+    
+    <!-- service层角色实现类 -->
+    <bean id="RoleServiceImpl" class="com.bdqn.smbms.service.impl.RoleServiceImpl">
+    	<property name="roleDao" ref="IRoleDao"></property>
+    </bean>
+    
+    <!-- service层供应商实现类 -->
+    <bean id="ProviderServiceImpl" class="com.bdqn.smbms.service.impl.ProviderServiceImpl">
+    	<property name="providerDao" ref="IProviderDao"></property>
+    </bean>
+    
+    <!-- Controller层用户控制器 -->
+    <bean name="UserController" class="com.bdqn.smbms.controller.UserController">
+    	<property name="userService" ref="UserServiceImpl"></property>
+    	<property name="roleService" ref="RoleServiceImpl"></property>
+    </bean>
+    
+     <!-- Controller层供应商控制器 -->
+    <bean name="ProviderController" class="com.bdqn.smbms.controller.ProviderController">
+    	<property name="providerService" ref="ProviderServiceImpl"></property>
+    </bean>
+</beans>

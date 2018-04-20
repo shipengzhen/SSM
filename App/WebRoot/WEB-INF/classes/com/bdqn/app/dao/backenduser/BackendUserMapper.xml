@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bdqn.app.dao.backenduser.IBackendUserDao"><!--映射的接口-->
+
+	<resultMap type="BackendUser" id="backendUser">
+		<result property="userTypeName" column="valueName"/>
+	</resultMap>
+
+	<!-- 管理员登陆 -->
+	<select id="findBackendUser" resultMap="backendUser">
+		select * from backend_user inner join data_dictionary
+		on backend_user.userType=data_dictionary.id
+		where userCode=#{userCode} and userPassword=#{userPassword};
+	</select>
+</mapper>
